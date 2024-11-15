@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: basic-infra
+server:
+  port: 6001
