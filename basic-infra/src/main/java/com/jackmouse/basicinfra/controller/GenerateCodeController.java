@@ -30,9 +30,9 @@ public class GenerateCodeController {
         HikariDataSource dataSource = new HikariDataSource();
         globalConfig.setGenerateTable(tableName);
         globalConfig.setTablePrefix(tablePrefix);
-        globalConfig.setBasePackage(globalConfig.getBasePackage() + "." + module);
+        globalConfig.setBasePackage("com.jackmouse." + module);
         //注意：url 需添加上 useInformationSchema=true 才能正常获取表的注释
-        dataSource.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/jackmouse_blog?useInformationSchema=true&characterEncoding=utf-8");
+        dataSource.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/system?useInformationSchema=true&characterEncoding=utf-8");
         dataSource.setUsername("root");
         dataSource.setPassword("12345678");
         //通过 datasource 和 globalConfig 创建代码生成器
