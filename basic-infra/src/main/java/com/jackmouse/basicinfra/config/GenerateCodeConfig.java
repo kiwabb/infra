@@ -20,8 +20,8 @@ public class GenerateCodeConfig {
     public GlobalConfig globalConfig() {
         //创建配置内容
         GlobalConfig globalConfig = new GlobalConfig();
-        globalConfig.getPackageConfig().setSourceDir("/Users/zhoujiaangyao/Downloads");
-        globalConfig.getPackageConfig().setMapperXmlPath("/Users/zhoujiaangyao/Downloads");
+        globalConfig.getPackageConfig().setSourceDir("/Users/zhoujiaangyao/Downloads/code");
+        globalConfig.getPackageConfig().setMapperXmlPath("/Users/zhoujiaangyao/Downloads/code");
         //设置根包
         globalConfig.setBasePackage("com.jackmouse");
 
