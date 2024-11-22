@@ -1,0 +1,40 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: gateway-server
+  cloud:
+    gateway:
+      httpclient:
+        response-timeout: 5s
+        connect-timeout: 1000
+      discovery:
+        locator:
+          enabled: false
+          lower-case-service-id: true
+      routes:
+        - id: basic-system
+          uri: lb://basicsystem
+          predicates:
+            - Path=/basic-system/**
+          filters:
+            - StripPrefix=1
+    loadbalancer:
+      nacos:
+        enabled: true
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  level:
+    root: debug
