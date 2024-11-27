@@ -26,13 +26,13 @@ public class GenerateCodeController {
 
 
     @GetMapping("/generate")
-    public void generateCode(@RequestParam String tableName, @RequestParam String tablePrefix, @RequestParam String module) {
+    public void generateCode(@RequestParam("tableName") String tableName, @RequestParam("tablePrefix") String tablePrefix, @RequestParam("module") String module) {
         HikariDataSource dataSource = new HikariDataSource();
         globalConfig.setGenerateTable(tableName);
         globalConfig.setTablePrefix(tablePrefix);
         globalConfig.setBasePackage("com.jackmouse." + module);
         //注意：url 需添加上 useInformationSchema=true 才能正常获取表的注释
-        dataSource.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/system?useInformationSchema=true&characterEncoding=utf-8");
+        dataSource.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/file_center?useInformationSchema=true&characterEncoding=utf-8");
         dataSource.setUsername("root");
         dataSource.setPassword("12345678");
         //通过 datasource 和 globalConfig 创建代码生成器

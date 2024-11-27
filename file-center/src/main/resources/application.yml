@@ -1,0 +1,17 @@
+server:
+  port: 4000
+spring:
+  application:
+    name: file-center
+  datasource:
+    url: jdbc:mysql://localhost:3306/file_center?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 12345678
+jackmouse:
+  file-server:
+    type: aliyun
+    aliyun:
+
+logging:
+  level:
+    root: debug

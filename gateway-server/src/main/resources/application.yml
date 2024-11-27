@@ -19,6 +19,12 @@ spring:
             - Path=/basic-system/**
           filters:
             - StripPrefix=1
+        - id: IMS
+          uri: lb://InventoryMgtSystem
+          predicates:
+            - Path=/ims/**
+          filters:
+            - StripPrefix=1
     loadbalancer:
       nacos:
         enabled: true
