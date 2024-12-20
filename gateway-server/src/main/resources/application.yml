@@ -7,12 +7,18 @@ spring:
     gateway:
       httpclient:
         response-timeout: 5s
-        connect-timeout: 1000
+        connect-timeout: 5000
       discovery:
         locator:
           enabled: false
           lower-case-service-id: true
       routes:
+        - id: auth
+          uri: http://localhost:4000
+          predicates:
+            - Path=/userinfo  # 添加 Bearer Token
+          filters:
+            - StripPrefix=1
         - id: basic-system
           uri: lb://basicsystem
           predicates:
@@ -33,6 +39,14 @@ spring:
         server-addr: 127.0.0.1:8848
       config:
         server-addr: 127.0.0.1:8848
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:4000
+
+app:
+  base-uri: http://127.0.0.1:4200
 
 management:
   endpoint:

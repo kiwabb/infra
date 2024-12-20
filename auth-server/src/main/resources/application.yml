@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: auth-server
+server:
+  port: 4000
+
+logging:
+  level:
+    org.springframework.security: TRACE
+    root: trace
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
