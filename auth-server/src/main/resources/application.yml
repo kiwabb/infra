@@ -9,6 +9,11 @@ logging:
     org.springframework.security: TRACE
     root: trace
 
+dubbo:
+  registry:
+    address: nacos://${nacos.address:127.0.0.1}:8848
+    register-mode: instance
+
 management:
   endpoints:
     web:

@@ -1,6 +1,6 @@
 package com.jackmouse.filecenter.util;
 
-import cn.hutool.core.util.IdUtil;
+
 import com.jackmouse.filecenter.entity.FileInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -25,7 +25,6 @@ public class FileUtil {
 
 	public static FileInfo getFileInfo(MultipartFile file) {
 		FileInfo fileInfo = new FileInfo();
-		fileInfo.setId(IdUtil.fastSimpleUUID());
 		fileInfo.setName(file.getOriginalFilename());
 		fileInfo.setContentType(file.getContentType());
 		fileInfo.setIsImg(fileInfo.getContentType().startsWith("image/"));

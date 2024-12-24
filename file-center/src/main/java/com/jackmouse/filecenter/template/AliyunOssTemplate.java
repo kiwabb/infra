@@ -9,7 +9,7 @@ import com.aliyun.oss.common.comm.SignVersion;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectRequest;
 
-import com.jackmouse.common.constant.CommonConstant;
+
 import com.jackmouse.filecenter.model.ObjectInfo;
 import com.jackmouse.filecenter.properties.FileServerProperties;
 import lombok.SneakyThrows;
@@ -72,8 +72,8 @@ public class AliyunOssTemplate implements OssTemplate {
         ossClient.putObject(new PutObjectRequest(
                 bucketName,objectName, is, objectMetadata));
         ObjectInfo objectInfo= new ObjectInfo();
-        objectInfo.setObjectPath(bucketName + CommonConstant.PATH_SPLIT + objectName);
-        objectInfo.setObjectUrl(fileServerProperties.getAliyun().getEndpoint() + CommonConstant.PATH_SPLIT + objectInfo.getObjectPath());
+//        objectInfo.setObjectPath(bucketName + CommonConstant.PATH_SPLIT + objectName);
+//        objectInfo.setObjectUrl(fileServerProperties.getAliyun().getEndpoint() + CommonConstant.PATH_SPLIT + objectInfo.getObjectPath());
         return objectInfo;
     }
 
