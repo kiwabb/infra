@@ -1,5 +1,7 @@
 package com.jackmouse.authserver.domains;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
@@ -13,6 +15,8 @@ import java.util.*;
  * @Date 2024/12/24 10:19
  * @Version 1.0
  **/
+@Getter
+@Setter
 public class LoginAppUser extends User implements OAuth2AuthenticatedPrincipal {
 
     private final Long id;

@@ -1,5 +1,8 @@
 package com.jackmouse.authserver.config;
 
+import com.alibaba.fastjson2.JSON;
+import com.jackmouse.authserver.domains.LoginAppUser;
+import com.jackmouse.authserver.utils.LoginUserUtils;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -200,6 +203,7 @@ public class JackMouseSecurityConfig {
                 context.getClaims().claims((claims) -> {
                     Set<String> roles = AuthorityUtils.authorityListToSet(context.getPrincipal().getAuthorities());
                     claims.put("role", roles);
+                    claims.put("userId", ((LoginAppUser) context.getPrincipal().getPrincipal()).getId());
                 });
             }
         };
