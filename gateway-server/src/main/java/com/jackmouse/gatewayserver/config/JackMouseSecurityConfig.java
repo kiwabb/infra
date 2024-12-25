@@ -1,8 +1,13 @@
 package com.jackmouse.gatewayserver.config;
 
+import com.jackmouse.gatewayserver.filters.TokenTransferFilter;
+import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
@@ -14,7 +19,10 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 // * @Version 1.0
 // **/
 @Configuration
+@EnableWebFluxSecurity
 public class JackMouseSecurityConfig {
+    @Resource
+    private JackMouseReactiveAuthorizationManager reactiveAuthorizationManager;
 
 //    @Bean
 //    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
@@ -40,10 +48,14 @@ public class JackMouseSecurityConfig {
 
         http
                 .authorizeExchange(authorize -> authorize
-                        .anyExchange().authenticated()
+                        .anyExchange()
+                        .access(reactiveAuthorizationManager)
                 )
+                .addFilterAfter(new TokenTransferFilter(), SecurityWebFiltersOrder.AUTHENTICATION)
         .oauth2ResourceServer((resourceServer) -> resourceServer
-                .jwt(Customizer.withDefaults()));
+                .jwt(Customizer.withDefaults())
+        );
+
         return http.build();
     }
 
