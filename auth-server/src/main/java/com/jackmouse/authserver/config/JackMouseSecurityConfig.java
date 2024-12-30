@@ -134,11 +134,28 @@ public class JackMouseSecurityConfig {
                 .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .redirectUri("http://localhost:8000/signin-redirect-callback")
                 .postLogoutRedirectUri("http://localhost:8000//logged-out")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
                 .scope("offline_access")
+                .clientSettings(ClientSettings.builder().requireProofKey(true).build())
+                .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(8))
+                        .refreshTokenTimeToLive(Duration.ofHours(8)).reuseRefreshTokens(false)
+                        .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED).build()).build();
+
+        RegisteredClient blogClient = RegisteredClient.withId(UUID.randomUUID().toString())
+                .clientId("jack-mouse-blog-client")
+                .clientSecret("{noop}123456")
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                .redirectUri("http://localhost:3000/api/auth/callback/JackMouse")
+                .scope(OidcScopes.OPENID)
+                .scope(OidcScopes.PROFILE)
                 .clientSettings(ClientSettings.builder().requireProofKey(true).build())
                 .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(8))
                         .refreshTokenTimeToLive(Duration.ofHours(8)).reuseRefreshTokens(false)
@@ -158,7 +175,7 @@ public class JackMouseSecurityConfig {
                         .refreshTokenTimeToLive(Duration.ofHours(8)).reuseRefreshTokens(false)
                         .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED).build()).build();
 
-        return new InMemoryRegisteredClientRepository(oidcClient, authCodeClient);
+        return new InMemoryRegisteredClientRepository(oidcClient, authCodeClient,blogClient);
     }
 
     @Bean
@@ -197,7 +214,7 @@ public class JackMouseSecurityConfig {
         return AuthorizationServerSettings.builder().build();
     }
 
-    @Bean
+    //@Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer() {
         return context -> {
             if (context.getTokenType().equals(OAuth2TokenType.ACCESS_TOKEN)) {

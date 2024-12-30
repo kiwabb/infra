@@ -1,5 +1,6 @@
 package com.jackmouse.gatewayserver.config;
 
+import com.jackmouse.gatewayserver.constants.ApiPathConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -27,28 +28,26 @@ import java.util.Objects;
 @Slf4j
 public class JackMouseReactiveAuthorizationManager implements ReactiveAuthorizationManager<AuthorizationContext> {
     @Override
-    public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext authorizationContext) {
-        ServerWebExchange exchange = authorizationContext.getExchange();
-        ServerHttpRequest request = exchange.getRequest();
-        String path = request.getURI().getPath();
-        log.info("请求路径: {}", path);
-        // 跨域OPTIONS请求直接放行
-        if (request.getMethod() == HttpMethod.OPTIONS) {
-            return Mono.just(new AuthorizationDecision(true));
+    public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext context) {
+        String path = context.getExchange().getRequest().getURI().getPath();
+
+
+        // 管理员API需要ADMIN角色
+        if (path.startsWith(ApiPathConstants.ADMIN_API)) {
+            return authentication
+                    .map(auth -> auth.getAuthorities().stream()
+                            .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")))
+                    .map(AuthorizationDecision::new);
         }
-        return authentication
-                .filter(Authentication::isAuthenticated)
-                .filter(a -> a instanceof JwtAuthenticationToken)
-                .cast(JwtAuthenticationToken.class)
-                .doOnNext(token -> {
-                    log.info("用户信息: {}", token.getToken().getClaims());
-                    log.info("用户角色: {}", token.getAuthorities());
-                })
-                .flatMapIterable(AbstractAuthenticationToken::getAuthorities)
-                .map(GrantedAuthority::getAuthority)
-                .any(authority ->
-                    Objects.equals(authority, "SCOPE_openid"))
-                .map(AuthorizationDecision::new)
-                .defaultIfEmpty(new AuthorizationDecision(false));
+
+        // 用户API只需要认证
+        if (path.startsWith(ApiPathConstants.USER_API)) {
+            return authentication
+                    .map(auth -> auth != null && auth.isAuthenticated())
+                    .map(AuthorizationDecision::new);
+        }
+
+        // 默认拒绝访问
+        return Mono.just(new AuthorizationDecision(false));
     }
 }

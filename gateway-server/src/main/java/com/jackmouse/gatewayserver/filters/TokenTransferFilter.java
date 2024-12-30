@@ -24,6 +24,7 @@ import reactor.core.publisher.Mono;
 public class TokenTransferFilter implements WebFilter {
     @Override
     public @NonNull Mono<Void> filter(@NonNull ServerWebExchange exchange,@NonNull WebFilterChain chain) {
+        log.debug("TokenTransferFilter executing...");
         return ReactiveSecurityContextHolder.getContext()
                 .map(SecurityContext::getAuthentication)
                 .cast(JwtAuthenticationToken.class)

@@ -20,8 +20,8 @@ public class GenerateCodeConfig {
     public GlobalConfig globalConfig() {
         //创建配置内容
         GlobalConfig globalConfig = new GlobalConfig();
-        globalConfig.getPackageConfig().setSourceDir("/Users/zhoujiaangyao/zhoujiangyao/jackmouse-project/jackmouse-microservices/infra/file-center/src/main/java");
-        globalConfig.getPackageConfig().setMapperXmlPath("/Users/zhoujiaangyao/zhoujiangyao/jackmouse-project/jackmouse-microservices/infra/file-center/src/main/resources/mapper");
+        globalConfig.getPackageConfig().setSourceDir("/Users/zhoujiaangyao/zhoujiangyao/jackmouse-project/jackmouse-microservices/blog/article/src/main/java");
+        globalConfig.getPackageConfig().setMapperXmlPath("/Users/zhoujiaangyao/zhoujiangyao/jackmouse-project/jackmouse-microservices/blog/article/src/main/resources/mapper");
 
         //设置生成 entity 并启用 Lombok
         globalConfig.setEntityGenerateEnable(true);
