@@ -1,8 +1,10 @@
 package com.jackmouse.filecenter.template;
 
 
+import com.jackmouse.filecenter.entity.FileInfo;
 import com.jackmouse.filecenter.model.ObjectInfo;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -14,4 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
  **/
 public interface OssTemplate extends InitializingBean {
     ObjectInfo upload(MultipartFile file);
+
+    InputStreamResource get(FileInfo fileInfo);
+
+    void deleteFile(FileInfo fileInfo);
 }

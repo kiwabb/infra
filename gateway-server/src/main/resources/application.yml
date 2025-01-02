@@ -5,15 +5,27 @@ spring:
     allow-bean-definition-overriding: true
   application:
     name: gateway-server
+  codec:
+    max-in-memory-size: 20MB
   cloud:
     gateway:
       httpclient:
         response-timeout: 5s
         connect-timeout: 5000
+        pool:
+          max-idle-time: 10000
+          acquire-timeout: 10000
+        max-initial-line-length: 10485760 # 10MB
+        max-header-size: 20MB
+        max-chunk-size: 20MB
       discovery:
         locator:
           enabled: true
           lower-case-service-id: true
+      default-filters:
+        - name: RequestSize
+          args:
+            maxSize: 20MB
       routes:
         - id: auth
           uri: http://localhost:4000
@@ -31,6 +43,14 @@ spring:
           uri: lb://article
           predicates:
             - Path=/public/v1/article/**
+          filters:
+            - StripPrefix=1
+        - id: file
+          uri: lb://file-center
+          predicates:
+            - Path=/protected/v1/file/**, /public/v1/file/**
+          filters:
+            - StripPrefix=1
         - id: IMS
           uri: lb://InventoryMgtSystem
           predicates:

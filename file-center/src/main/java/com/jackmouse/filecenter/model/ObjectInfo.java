@@ -6,6 +6,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ObjectInfo {
+    private String name;
     /**
      * 对象查看路径
      */
@@ -14,4 +15,8 @@ public class ObjectInfo {
      * 对象保存路径
      */
     private String objectPath;
+
+    private String bucketName;
+
+    private String objectName;
 }

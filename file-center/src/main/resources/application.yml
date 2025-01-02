@@ -1,5 +1,8 @@
 server:
-  port: 4000
+  port: 14000
+  tomcat:
+    max-http-form-post-size: 20MB
+    max-swallow-size: 20MB
 spring:
   application:
     name: file-center
@@ -7,6 +10,20 @@ spring:
     url: jdbc:mysql://localhost:3306/file_center?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
     username: root
     password: 12345678
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        server-addr: 127.0.0.1:8848
+        import-check:
+          enabled: false
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+  codec:
+    max-in-memory-size: 20MB
 jackmouse:
   file-server:
     type: aliyun

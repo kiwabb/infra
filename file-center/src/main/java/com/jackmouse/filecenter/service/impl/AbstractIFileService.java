@@ -21,6 +21,9 @@ public abstract class AbstractIFileService extends ServiceImpl<FileInfoMapper, F
             throw new IllegalArgumentException("缺少后缀名");
         }
         ObjectInfo objectInfo = uploadFile(file);
+        fileInfo.setName(fileInfo.getName());
+        fileInfo.setBucketName(objectInfo.getBucketName());
+        fileInfo.setObjectName(objectInfo.getObjectName());
         fileInfo.setPath(objectInfo.getObjectPath());
         fileInfo.setUrl(objectInfo.getObjectUrl());
         fileInfo.setModule(module);

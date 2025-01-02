@@ -2,6 +2,7 @@ package com.jackmouse.filecenter.entity;
 
 import com.jackmouse.common.entity.BaseEntity;
 import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
 import java.io.Serializable;
 
@@ -75,5 +76,9 @@ public class FileInfo extends BaseEntity implements Serializable {
      * 文件所属模块
      */
     private String module;
+
+    private String bucketName;
+
+    private String objectName;
 
 }

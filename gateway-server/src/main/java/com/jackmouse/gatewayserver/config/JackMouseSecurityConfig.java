@@ -26,7 +26,7 @@ public class JackMouseSecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeExchange(authorize -> authorize
-                        .pathMatchers("/public/**")
+                        .pathMatchers("/public/**", "/protected/**")
                         .permitAll()
                         .anyExchange()                                // 其他所有路径
                         .access(reactiveAuthorizationManager)         // 需要进行权限校验

@@ -7,8 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.jackmouse.filecenter.entity.FileInfo;
 import com.jackmouse.filecenter.service.FileInfoService;
 import org.springframework.web.multipart.MultipartFile;
+import com.aliyun.oss.OSS;
+import com.aliyun.oss.model.GeneratePresignedUrlRequest;
+import java.net.URL;
+import java.util.Date;
 
 import java.util.List;
+
+import com.aliyun.oss.model.OSSObject;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import java.io.InputStream;
 
 /**
  * 文件表 控制层。
@@ -17,7 +28,7 @@ import java.util.List;
  * @since 2024-11-22
  */
 @RestController
-@RequestMapping("/fileInfo")
+@RequestMapping("/v1/file")
 public class FileInfoController {
 
     @Autowired
@@ -36,6 +47,7 @@ public class FileInfoController {
 
     @PostMapping("upload")
     public Result<FileInfo> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("module") String module) {
+
         return Result.succeed(fileInfoService.upload(file, module));
     }
 
@@ -46,8 +58,8 @@ public class FileInfoController {
      * @return {@code true} 删除成功，{@code false} 删除失败
      */
     @DeleteMapping("remove/{id}")
-    public Result<Boolean> remove(@PathVariable String id) {
-        return Result.succeed(fileInfoService.removeById(id));
+    public Result<Boolean> remove(@PathVariable("id") String id) {
+        return Result.succeed(fileInfoService.removeFileById(id));
     }
 
     /**
@@ -91,6 +103,26 @@ public class FileInfoController {
     @GetMapping("page")
     public Result<Page<FileInfo>> page(Page<FileInfo> page) {
         return Result.succeed(fileInfoService.page(page));
+    }
+
+
+    /**
+     * 获取文件流
+     *
+     * @param id 文件ID
+     * @return 文件流
+     */
+    @GetMapping("/get/{id}")
+    public ResponseEntity<InputStreamResource> getFile(@PathVariable("id") String id) {
+        return fileInfoService.getFile(id);
+    }
+
+    /**
+     * 获取图片预览（可选，如果需要图片预览功能）
+     */
+    @GetMapping("/preview/{id}")
+    public ResponseEntity<InputStreamResource> previewImage(@PathVariable("id") String id) {
+        return fileInfoService.previewImage(id);
     }
 
 }
