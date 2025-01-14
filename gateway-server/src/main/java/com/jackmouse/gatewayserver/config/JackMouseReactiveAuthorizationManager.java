@@ -30,7 +30,11 @@ public class JackMouseReactiveAuthorizationManager implements ReactiveAuthorizat
     @Override
     public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext context) {
         String path = context.getExchange().getRequest().getURI().getPath();
-
+        if (path.startsWith(ApiPathConstants.SERVER_APT)) {
+            return authentication
+                    .map(auth -> auth != null && auth.isAuthenticated())
+                    .map(AuthorizationDecision::new);
+        }
 
         // 管理员API需要ADMIN角色
         if (path.startsWith(ApiPathConstants.ADMIN_API)) {

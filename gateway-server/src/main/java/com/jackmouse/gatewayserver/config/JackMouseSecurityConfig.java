@@ -13,6 +13,7 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.ServerAuthenticationEntryPoint;
 import org.springframework.security.web.server.authorization.ServerAccessDeniedHandler;
+import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -31,6 +32,7 @@ public class JackMouseSecurityConfig {
                         .anyExchange()                                // 其他所有路径
                         .access(reactiveAuthorizationManager)         // 需要进行权限校验
                 )
+                //.securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint(serverAuthenticationEntryPoint())
                         .accessDeniedHandler(serverAccessDeniedHandler())

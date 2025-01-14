@@ -23,33 +23,46 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class TokenTransferFilter implements WebFilter {
     @Override
-    public @NonNull Mono<Void> filter(@NonNull ServerWebExchange exchange,@NonNull WebFilterChain chain) {
+    public @NonNull Mono<Void> filter(@NonNull ServerWebExchange exchange, @NonNull WebFilterChain chain) {
         log.debug("TokenTransferFilter executing...");
+        
+        // 获取请求路径
+        String path = exchange.getRequest().getURI().getPath();
+        
+        // 如果是公开接口，直接放行
+        if (isPublicPath(path)) {
+            return chain.filter(exchange);
+        }
+
         return ReactiveSecurityContextHolder.getContext()
                 .map(SecurityContext::getAuthentication)
                 .cast(JwtAuthenticationToken.class)
                 .flatMap(authentication -> {
-                    log.info("authentication: {}", authentication.getToken());
+                    log.info("Extracting authentication token: {}", authentication.getToken());
 
-                    // 获取用户ID并进行非空检查
                     Object userIdObject = authentication.getToken().getClaims().get(SecurityConstants.USER_ID_HEADER);
                     if (userIdObject != null) {
                         String userId = userIdObject.toString();
+                        log.info("User ID extracted: {}", userId);
 
-                        // 修改请求头，加入获取的 userId
                         ServerHttpRequest request = exchange.getRequest().mutate()
                                 .headers(h -> h.add(SecurityConstants.USER_ID_HEADER, userId))
                                 .build();
 
-                        // 使用 mutate() 生成一个新的 ServerWebExchange
-                        ServerWebExchange newExchange = exchange.mutate().request(request).build();
-
-                        // 继续处理过滤器链
-                        return chain.filter(newExchange);
+                        return chain.filter(exchange.mutate().request(request).build());
                     }
-
-                    // 如果没有 userId，直接继续过滤链
+                    return chain.filter(exchange);
+                })
+                .switchIfEmpty(chain.filter(exchange))  // 如果没有认证信息，继续处理请求
+                .onErrorResume(ex -> {
+                    log.error("Error processing authentication token: ", ex);
                     return chain.filter(exchange);
                 });
+    }
+
+    private boolean isPublicPath(String path) {
+        return path.startsWith("/public/") || 
+               path.startsWith("/api/v1/public/") ||
+               path.startsWith("/api/v1/auth/");
     }
 }

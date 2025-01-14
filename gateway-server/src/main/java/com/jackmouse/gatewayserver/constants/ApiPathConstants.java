@@ -11,6 +11,7 @@ public class ApiPathConstants {
     // 受保护API路径
     public static final String USER_API = API_VERSION + "/user";
     public static final String ADMIN_API = API_VERSION + "/admin";
+    public static final String SERVER_APT =  "/basic-system";
     public static final String PROTECTED_API = API_VERSION + "/protected";
     
     // 具体API端点

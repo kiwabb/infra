@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.jackmouse.authserver.domains.LoginAppUser;
 import com.jackmouse.authserver.utils.LoginUserUtils;
 import com.jackmouse.common.constants.SecurityConstants;
+import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -25,7 +26,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
@@ -204,6 +205,7 @@ public class JackMouseSecurityConfig {
         return keyPair;
     }
 
+
     @Bean
     public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
         return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
@@ -214,11 +216,12 @@ public class JackMouseSecurityConfig {
         return AuthorizationServerSettings.builder().build();
     }
 
-    //@Bean
+    @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer() {
         return context -> {
             if (context.getTokenType().equals(OAuth2TokenType.ACCESS_TOKEN)) {
                 context.getClaims().claims((claims) -> {
+                    claims.put("iss", "http://localhost:4000");
                     Set<String> roles = AuthorityUtils.authorityListToSet(context.getPrincipal().getAuthorities());
                     claims.put("role", roles);
                     claims.put(SecurityConstants.USER_ID_HEADER, ((LoginAppUser) context.getPrincipal().getPrincipal()).getId());
